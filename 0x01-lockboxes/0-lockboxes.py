@@ -1,42 +1,37 @@
 #!/usr/bin/python3
 """ Lockboxes challenge """
 
-# Global variable for recursive function
-boxes_unlocked = []
-
-
-def unlocker(boxes: list, box: int = 0, i: int = 0):
-    """ Goes through the boxes and unlocks them recursively """
-    # Unlock current box
-    boxes_unlocked[box] = True
-
-    # Check if array indexes are valid before proceeding
-    if box >= len(boxes) or i >= len(boxes[box]) or False not in boxes_unlocked:
-        return
-
-    # Check for key and unlock next box if box has key and key's box is locked
-    key = int(boxes[box][i]) if isinstance(boxes[box][i], (int, str, bytes)) else 0
-    if key and key < len(boxes) and not boxes_unlocked[key]:
-        unlocker(boxes, key)
-
-    # Move to next key in box if available
-    i += 1
-    if i < len(boxes[box]):
-        unlocker(boxes, box, i)
-
 
 def canUnlockAll(boxes):
     """ Returns True if all contained boxes can be opened, False otherwise """
+    if not isinstance(boxes, list):
+        return False
+    for box in boxes:
+        if not isinstance(box, list):
+            return False
     if len(boxes) == 1:
         return True
 
-    # Update boxes locked state in global variable boxes_unlocked
-    boxes_unlocked.clear()
-    for item in [False] * len(boxes):
-        boxes_unlocked.append(item)
+    # Set boxes locked state
+    boxes_unlocked = [False] * len(boxes)
 
     # Unlock boxes with available keys
-    unlocker(boxes)
+    box, keys = 0, [0]
+    while box < len(keys):
+        # Unlock current box
+        boxes_unlocked[keys[box]] = True
+
+        # Check if all boxes already unlocked
+        if False not in boxes_unlocked:
+            break
+
+        for key in boxes[keys[box]]:
+            # Check key and unlock its box if key is valid
+            key = int(key) if isinstance(key, (int, str, bytes)) else 0
+            if key and key < len(boxes) and key not in keys:
+                boxes_unlocked[key] = True
+                keys.append(key)
+        box += 1
 
     # return True if all boxes were unlocked, else False
     return False if False in boxes_unlocked else True
@@ -64,5 +59,6 @@ if __name__ == '__main__':
     boxes = [[1, 4, 6], [2], [0, 4, 1], [5, 6, 2], [3], [4, 1], [6]]
     print(canUnlockAll(boxes))
 
-    boxes = [[1, 4, None, [False]], [2], [{0: 9}, 4, 1], [3], [], [4, 1], [5, 6]]
+    boxes = [[1, 4, None, [False]], [2], [{0: 9}, 4, 1], [3], [],
+             [4, 1], [5, 6]]
     print(canUnlockAll(boxes))
