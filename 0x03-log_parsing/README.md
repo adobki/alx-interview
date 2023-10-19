@@ -5,19 +5,39 @@ This folder contains the actual results of completing the tasks in the project _
 1. Python
 
 ## Usage
-1. **Through a Terminal:**
+Log lines can be inputted manually or automatically from a terminal.
 
-    i. **Automated**: Run `./0-generator.py | ./0-stats.py`
-    
-    ii. **Manual**: From a terminal, run `./0-stats.py` then input lines manually in the terminal.
+ 1. **Automated**: Pipe in input from another app,
+   `./0-generator.py | ./0-stats.py`
 
+ 2. **Manual**: Run the script from a terminal and input lines manually, `./0-stats.py`
 
-2. **Through a Function Call**:
- 
-   Import _log_parser()_ from [0-stats.py](0-stats.py), then use stdin to feed it lines, or pass a list to it with the lines: `log_parser(log_lines)`.
 
 ## Mandatory Tasks
 There is just one task in this project, which is a Python script (*.py) named [0-stats.py](0-stats.py).
 
 ## Advanced Tasks
-There is none is this project.
+There is none in this project, but I went out on a limb and created an advanced version of the log parser named [0-stats_advanced.py](0-stats_advanced.py).
+
+### Usage (Optional Features)
+The above stated usage for the standard version also apply here, with the following additions:
+* **As a function**:
+Import _log_parser()_ from [0-stats_advanced.py](0-stats_advanced.py), then pass a list to it with the lines:
+      `log_parser(log_lines)`
+* **Run with parameters**:
+The log parser supports the following features/parameters:
+  * **_slowmo_**: Enables random 1-second pauses between inputs
+  * **_taint_**: Randomly invalidates/taints a line before it is parsed
+  * **_verbose_**: Enables printing additional info, plus errors if any.
+
+    _Passing taint=True also enables this automatically._
+
+  Any/all of these can be activated by,
+  * **As a function**: Call the log_parser function with the required parameter(s) as True. e.g.,
+
+        log_parser(slowmo=True, taint=True, verbose=True)
+        log_parser(log_lines, verbose=True)
+  * **From the terminal**: First log line must use a special \_\_ARGS__ dunder with this syntax: `__args__ <param> <param>. . .`, else script skips checking for parameters and parses the line normally. **Usage**:
+
+        __args__ -h                # print usage documentation
+        __ARGS__ Verbose -S LiSt   # enable verbose, slowmo, list modes
